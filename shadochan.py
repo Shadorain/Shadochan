@@ -27,6 +27,7 @@ Usage:
 Global Options:
     --version   Displays current version of Shadochan
     -v          Outputs more than normal
+    -q          Only prints main output
 
 ----------------------------------------------------------------------------
 
@@ -41,7 +42,6 @@ Todo Options:
 Calc Options:
     <x>         Placeholder for first value
     <y>         Placeholder for second value
-    -q          Only prints output
 
 Spent Options:
     init        Creates table if not already made
@@ -60,6 +60,7 @@ from docopt import docopt
 from spend_tracker import *
 from todo_part import *
 from uuid import uuid4
+from calculate import *
 
 def_fold = "/root/Documents/Shadochan/"
 today = date.today().strftime('%m-%d-%Y')
@@ -109,8 +110,6 @@ def spend_track(args):
 def todo(args):
     file = str(def_fold + "todo/" + args['FILE'])
     headers = ["Category", "Date", "Due-Date", "Description", "Notes"]
-
-    my_id = str(uuid4())
 
     if args['new']:
         x = int(input("What type of todo list is this: \n1): Homework\n2): Goals\n3): Tech\n $(1-3)> "))
@@ -234,27 +233,50 @@ def todo(args):
                 break
             f.close()
 
-        if ctype in ["h", "g", "t"]:
-            # Authing if real db
-            line = subprocess.check_output(
-                ["file", "/root/Documents/Shadochan/todo/{}.{}.db".format(args['FILE'], ctype)])
-            if "SQLite" in str(line):
-                print("File Validity: True")
-                results = tabulate(list(args['FILE'], type, ctype,
-                                        category=None), headers, tablefmt="fancy_grid", showindex="always")
-                print(results)
-                x = int(input("Which line would you like to delete Shado-kun: \n$(-)>  "))
-
-            else:
-                print("  |-------------------------|  ")
-                print("-<|      Invalid File       |>-")
-                print("-<| shadochan todo new FILE |>-")
-                print("  |-------------------------|  ")
+    if ctype in ["h", "g", "t"]:
+        # Authing if real db
+        line = subprocess.check_output(
+            ["file", "/root/Documents/Shadochan/todo/{}.{}.db".format(args['FILE'], ctype)])
+        if "SQLite" in str(line):
+            print("File Validity: True")
+            results = tabulate(list(args['FILE'], type, ctype,
+                                    category=None), headers, tablefmt="fancy_grid", showindex="always")
+            print(results)
+            ln = int(input("Which line would you like to delete Shado-kun: \n$(-)>  "))
+            delete(type, args['FILE'], ln)
         else:
             print("  |-------------------------|  ")
-            print("-<|     File not found      |>-")
+            print("-<|      Invalid File       |>-")
             print("-<| shadochan todo new FILE |>-")
             print("  |-------------------------|  ")
+    else:
+        print("  |-------------------------|  ")
+        print("-<|     File not found      |>-")
+        print("-<| shadochan todo new FILE |>-")
+        print("  |-------------------------|  ")
+
+
+def calc(args):
+    vq = 0
+    if args['-v']:
+        vq = 1
+    elif args['-q']:
+        vq = -1
+
+    if args['add']:
+        print(calc_add(args['<x>'], args['<y>'], vq))
+    elif args['sub']:
+        print(calc_sub(args['<x>'], args['<y>'], vq))
+    elif args['mul']:
+        print(calc_mul(args['<x>'], args['<y>'], vq))
+    elif args['div']:
+        print(calc_div(args['<x>'], args['<y>'], vq))
+    elif args['sqr']:
+        print(calc_sqr(args['<x>'], vq))
+    elif args['cub']:
+        print(calc_cub(args['<x>'], vq))
+    elif args['exp']:
+        print(calc_exp(args['<x>'], args['<y>'], vq))
 
 
 if __name__ == '__main__':
@@ -263,3 +285,5 @@ if __name__ == '__main__':
         spend_track(args)
     if args['todo']:
         todo(args)
+    if args['calc']:
+        calc(args)
