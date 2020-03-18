@@ -16,7 +16,8 @@ Usage:
     shadochan todo list [ --cat <type> ] FILE
     shadochan todo add <category> <due_date> <description> [ -n <notes> ] FILE
     shadochan todo ( new | delete ) FILE
-    shadochan calc [ -v | -q ] ( add | sub | mul | div |  sqr | cub | exp ) <x> <y>
+    shadochan calc [ -v | -q ] ( sqr | cub ) <x>
+    shadochan calc [ -v | -q ] ( add | sub | mul | div | exp ) <x> <y>
     shadochan spent [ -v ] ( init | view )
     shadochan spent log <amount> <category> <message>
     shadochan (-h | --help)
@@ -57,10 +58,10 @@ import os
 import time
 import subprocess
 from docopt import docopt
-from spend_tracker import *
-from todo_part import *
+from bin.spend_tracker import *
+from bin.todo_part import *
 from uuid import uuid4
-from calculate import *
+from bin.calculate import *
 
 def_fold = "/root/Documents/Shadochan/"
 today = date.today().strftime('%m-%d-%Y')
