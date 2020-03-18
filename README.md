@@ -1,5 +1,6 @@
-                                **Shadochan 1.0**
-                                #############
+##############################################################################
+
+                               Shadochan 1.0
       This is an intensive Script to handle any basic Shado-kun needs!
 
                   Shado-chan will support in any way I can!
